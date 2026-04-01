@@ -362,10 +362,6 @@
       align-items: start;
     }
 
-    @media (max-width: 768px) {
-      .api-grid { grid-template-columns: 1fr; }
-    }
-
     .api-info h3 {
       font-size: 1.15rem;
       font-weight: 700;
@@ -820,71 +816,65 @@
     .catalog-error .err-icon { font-size: 2rem; }
 
     /* ── Hamburger ── */
+    /* ── Hamburger ── */
     .hamburger {
       display: none;
-      flex-direction: column;
-      justify-content: center;
-      gap: 5px;
       background: none;
       border: none;
+      color: var(--text);
+      font-size: 1.4rem;
       cursor: pointer;
-      padding: 4px;
-      width: 32px;
-      height: 32px;
+      padding: 0.25rem 0.5rem;
+      line-height: 1;
+      flex-shrink: 0;
     }
-
-    .hamburger span {
-      display: block;
-      height: 2px;
-      width: 100%;
-      background: var(--text);
-      border-radius: 2px;
-      transition: all 0.25s;
-    }
-
-    .hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
-    .hamburger.open span:nth-child(2) { opacity: 0; }
-    .hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
 
     /* ── Mobile Responsive ── */
     @media (max-width: 768px) {
-      /* Nav */
-      .hamburger { display: flex; }
-      .nav-cta { display: none; }
+      /* Prevent any horizontal overflow */
+      html, body { overflow-x: hidden; max-width: 100%; }
+
+      /* ── Nav ── */
+      .hamburger { display: block; }
+      .nav-cta   { display: none; }
+
+      nav { padding: 0 1.25rem; position: relative; }
 
       .nav-links {
         display: none;
         position: absolute;
         top: 60px;
-        left: 0; right: 0;
-        background: rgba(17, 17, 24, 0.98);
+        left: 0;
+        right: 0;
+        background: rgba(10, 10, 15, 0.98);
         backdrop-filter: blur(12px);
         border-bottom: 1px solid var(--border);
         flex-direction: column;
-        gap: 0;
         padding: 0.5rem 0 1rem;
-        z-index: 99;
+        z-index: 200;
+        list-style: none;
+        gap: 0;
       }
 
       .nav-links.open { display: flex; }
-
-      .nav-links li { width: 100%; }
+      .nav-links li   { width: 100%; }
 
       .nav-links a {
         display: block;
-        padding: 0.75rem 1.5rem;
+        padding: 0.8rem 1.5rem;
         font-size: 1rem;
+        color: var(--text);
       }
 
-      /* Prevent horizontal overflow */
-      body { overflow-x: hidden; }
+      /* ── Hero ── */
+      .hero { padding: 3rem 1.25rem 2.5rem; }
 
-      /* Hero */
-      .hero { padding: 3.5rem 1.25rem 3rem; }
+      h1 {
+        font-size: 1.9rem;
+        letter-spacing: -0.02em;
+      }
 
-      h1 { font-size: 2rem; letter-spacing: -0.03em; }
-
-      .hero-sub { font-size: 1rem; }
+      .hero-sub { font-size: 0.95rem; }
 
       .hero-ctas {
         flex-direction: column;
@@ -895,52 +885,58 @@
       .hero-ctas .btn {
         width: 100%;
         justify-content: center;
-        font-size: 1rem;
+        font-size: 0.95rem;
       }
 
       .hero-stats {
-        gap: 1.5rem;
-        margin-top: 2.5rem;
+        gap: 1.25rem;
+        margin-top: 2rem;
       }
 
-      /* Sections */
-      .section-title { font-size: 1.75rem; }
+      .stat-num { font-size: 1.4rem; }
 
-      /* How it works steps */
-      .steps { gap: 1.5rem; }
+      /* ── Section headings ── */
+      .section-title { font-size: 1.6rem; }
+      .section-sub   { font-size: 0.95rem; }
+
+      /* ── How it works ── */
+      .how { padding: 3rem 1.25rem; }
+      .steps { gap: 1.25rem; }
       .step-arrow { display: none; }
+      .step { padding: 1.25rem; }
 
-      /* API grid */
-      .api-grid { grid-template-columns: 1fr; }
+      /* ── API section ── */
+      .api-section { padding: 3rem 1.25rem; }
+      .api-grid { grid-template-columns: 1fr; gap: 1.5rem; }
 
-      /* Code block */
-      pre { font-size: 0.78rem; }
+      /* Code blocks: let pre scroll, don't clip */
+      .code-block { overflow: visible; border-radius: 10px; }
+      .code-block pre { overflow-x: auto; font-size: 0.75rem; border-radius: 0 0 10px 10px; }
 
-      /* Catalog */
-      .catalog-filters { gap: 0.4rem; }
-      .filter-btn { font-size: 0.78rem; padding: 0.3rem 0.75rem; }
+      /* ── Catalog ── */
+      .catalog { padding: 3rem 1.25rem; }
+      .catalog-inner { padding: 0; }
+      .catalog-filters { gap: 0.35rem; }
+      .filter-btn { font-size: 0.75rem; padding: 0.3rem 0.65rem; }
+      .product-grid { grid-template-columns: 1fr; gap: 1rem; }
 
-      .product-grid {
-        grid-template-columns: 1fr;
-      }
+      /* ── ChatGPT CTA ── */
+      .chatgpt-cta { padding: 3rem 1.25rem; }
+      .chatgpt-cta-btn { width: 100%; justify-content: center; }
 
-      /* ChatGPT CTA */
-      .chatgpt-cta-btn {
-        width: 100%;
-        justify-content: center;
-      }
-
-      /* Pricing cards */
+      /* ── Pricing ── */
+      .pricing-inner { padding: 3rem 1.25rem; }
       .pricing-cards { grid-template-columns: 1fr; }
 
-      /* Footer */
+      /* ── Footer ── */
       footer {
         flex-direction: column;
+        align-items: center;
         gap: 1.25rem;
         text-align: center;
+        padding: 2rem 1.25rem;
       }
-
-      .footer-links { flex-wrap: wrap; justify-content: center; }
+      .footer-links { flex-wrap: wrap; justify-content: center; gap: 1rem; }
     }
 
     /* ── ChatGPT CTA ── */
@@ -997,9 +993,7 @@
     <li><a href="https://api.agentdata.shop/agents.txt" onclick="closeMenu()">Docs</a></li>
   </ul>
   <a href="https://api.agentdata.shop/agents.txt" target="_blank" rel="noopener noreferrer" class="btn btn-primary nav-cta">Get API access</a>
-  <button class="hamburger" id="hamburger" onclick="toggleMenu()" aria-label="Toggle navigation" aria-expanded="false">
-    <span></span><span></span><span></span>
-  </button>
+  <button class="hamburger" id="hamburger" onclick="toggleMenu()" aria-label="Toggle navigation" aria-expanded="false">☰</button>
 </nav>
 
 <main role="main">
@@ -1565,20 +1559,19 @@
     const btn = document.getElementById('hamburger');
     const links = document.getElementById('nav-links');
     const open = links.classList.toggle('open');
-    btn.classList.toggle('open', open);
+    btn.textContent = open ? '✕' : '☰';
     btn.setAttribute('aria-expanded', open);
   }
 
   function closeMenu() {
-    document.getElementById('hamburger').classList.remove('open');
-    document.getElementById('hamburger').setAttribute('aria-expanded', false);
+    document.getElementById('hamburger').textContent = '☰';
+    document.getElementById('hamburger').setAttribute('aria-expanded', 'false');
     document.getElementById('nav-links').classList.remove('open');
   }
 
   // Close menu on outside click
   document.addEventListener('click', function(e) {
-    const nav = document.querySelector('nav');
-    if (!nav.contains(e.target)) closeMenu();
+    if (!document.querySelector('nav').contains(e.target)) closeMenu();
   });
 </script>
 
