@@ -305,23 +305,22 @@
       transform: translateY(-3px);
     }
 
-    .step-num {
-      font-size: 0.75rem;
-      font-weight: 700;
-      color: var(--accent);
-      letter-spacing: 0.1em;
-      margin-bottom: 1rem;
+    .step-header {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 0.75rem;
     }
 
     .step-icon {
-      font-size: 2rem;
-      margin-bottom: 1rem;
+      font-size: 1.75rem;
+      line-height: 1;
+      flex-shrink: 0;
     }
 
     .step h3 {
-      font-size: 1.15rem;
+      font-size: 1.25rem;
       font-weight: 700;
-      margin-bottom: 0.5rem;
     }
 
     .step p {
@@ -405,6 +404,7 @@
       border: 1px solid var(--border);
       border-radius: 14px;
       overflow: hidden;
+      max-width: 100%;
     }
 
     .code-header {
@@ -455,9 +455,14 @@
     pre {
       padding: 1.5rem;
       overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
       font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', monospace;
       font-size: 0.82rem;
       line-height: 1.7;
+      max-width: 100%;
+      white-space: pre;
+      word-break: normal;
+      word-wrap: normal;
     }
 
     .tok-cmd    { color: #34d399; }
@@ -909,9 +914,9 @@
       .api-section { padding: 3rem 1.25rem; }
       .api-grid { grid-template-columns: 1fr; gap: 1.5rem; }
 
-      /* Code blocks: let pre scroll, don't clip */
-      .code-block { overflow: visible; border-radius: 10px; }
-      .code-block pre { overflow-x: auto; font-size: 0.75rem; border-radius: 0 0 10px 10px; }
+      /* Code blocks: scroll horizontally on mobile */
+      .code-block { overflow-x: auto; }
+      .code-block pre { font-size: 0.75rem; min-width: max-content; }
 
       /* ── Catalog ── */
       .catalog { padding: 3rem 1.25rem; }
@@ -1041,23 +1046,26 @@
 
     <div class="steps">
       <div class="step">
-        <div class="step-num">01</div>
-        <div class="step-icon">⚡</div>
-        <h3>Connect</h3>
+        <div class="step-header">
+          <div class="step-icon">⚡</div>
+          <h3>Connect</h3>
+        </div>
         <p>Point your agent at the AgentData API. No auth, no setup — just start making requests. Grab the agent guide from <code style="font-size:0.78rem;background:rgba(108,99,255,0.12);color:var(--accent2);padding:0.1rem 0.4rem;border-radius:4px">/agents.txt</code> to orient your LLM instantly.</p>
       </div>
       <div class="step-connector">→</div>
       <div class="step">
-        <div class="step-num">02</div>
-        <div class="step-icon">🔍</div>
-        <h3>Test</h3>
+        <div class="step-header">
+          <div class="step-icon">🔍</div>
+          <h3>Test</h3>
+        </div>
         <p>Let your agent search products with <code style="font-size:0.78rem;background:rgba(108,99,255,0.12);color:var(--accent2);padding:0.1rem 0.4rem;border-radius:4px">/api/match</code>, filter by price, accuracy and compatibility, add items to cart, and complete a full checkout flow — just like a real store.</p>
       </div>
       <div class="step-connector">→</div>
       <div class="step">
-        <div class="step-num">03</div>
-        <div class="step-icon">🚀</div>
-        <h3>Deploy</h3>
+        <div class="step-header">
+          <div class="step-icon">🚀</div>
+          <h3>Deploy</h3>
+        </div>
         <p>Once your agent behaves correctly against AgentData, swap in your production API. Your agent is already battle-tested against real e-commerce flows.</p>
       </div>
     </div>
@@ -1503,12 +1511,20 @@
         .replace(/"/g, '&quot;');
     }
 
+    function sortProducts(products) {
+      return [...products].sort((a, b) => {
+        const aLive = LIVE_DATA_IDS.has(a.id || a._id || '') ? 0 : 1;
+        const bLive = LIVE_DATA_IDS.has(b.id || b._id || '') ? 0 : 1;
+        return aLive - bLive;
+      });
+    }
+
     function applyFilter(cat) {
       activeFilter = cat;
       const filtered = cat === 'all'
         ? allProducts
         : allProducts.filter(p => (p.category || '') === cat);
-      renderProducts(filtered);
+      renderProducts(sortProducts(filtered));
     }
 
     document.querySelectorAll('.filter-btn').forEach(btn => {
