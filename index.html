@@ -404,6 +404,8 @@
       border: 1px solid var(--border);
       border-radius: 14px;
       overflow: hidden;
+      box-sizing: border-box;
+      width: 100%;
       max-width: 100%;
     }
 
@@ -914,9 +916,20 @@
       .api-section { padding: 3rem 1.25rem; }
       .api-grid { grid-template-columns: 1fr; gap: 1.5rem; }
 
-      /* Code blocks: scroll horizontally on mobile */
-      .code-block { overflow-x: auto; }
-      .code-block pre { font-size: 0.75rem; min-width: max-content; }
+      /* Code blocks: container constrained, pre scrolls inside */
+      .code-block {
+        overflow-y: hidden;
+        overflow-x: hidden;
+        width: 100%;
+        max-width: 100%;
+      }
+      .code-block pre {
+        font-size: 0.75rem;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        max-width: 100%;
+        box-sizing: border-box;
+      }
 
       /* ── Catalog ── */
       .catalog { padding: 3rem 1.25rem; }
