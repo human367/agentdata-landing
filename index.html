@@ -818,6 +818,42 @@
     }
 
     .catalog-error .err-icon { font-size: 2rem; }
+
+    /* ── ChatGPT CTA ── */
+    .chatgpt-cta {
+      padding: clamp(3rem, 6vw, 5rem) clamp(1.5rem, 5vw, 4rem);
+      text-align: center;
+    }
+
+    .chatgpt-cta-inner {
+      max-width: 560px;
+      margin: 0 auto;
+    }
+
+    .chatgpt-cta-icon {
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+      line-height: 1;
+    }
+
+    .chatgpt-cta-title {
+      font-size: clamp(1.75rem, 3.5vw, 2.5rem);
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      margin-bottom: 0.75rem;
+    }
+
+    .chatgpt-cta-sub {
+      color: var(--muted);
+      font-size: 1.05rem;
+      line-height: 1.6;
+      margin-bottom: 2rem;
+    }
+
+    .chatgpt-cta-btn {
+      font-size: 1rem;
+      padding: 0.75rem 2rem;
+    }
   </style>
 </head>
 <body>
@@ -1018,6 +1054,23 @@
         </div>
       </div>
     </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ── ChatGPT CTA ───────────────────────────────────────────────────────── -->
+<section class="chatgpt-cta">
+  <div class="chatgpt-cta-inner">
+    <div class="chatgpt-cta-icon">🤖</div>
+    <h2 class="chatgpt-cta-title">Try it with ChatGPT</h2>
+    <p class="chatgpt-cta-sub">Use our AgentData Shopping Assistant to find and purchase products directly from ChatGPT.</p>
+    <a
+      href="https://chatgpt.com/g/g-69cd1203714c81919c7d3d7bce4df9a2-agentdata-shopping-assistant"
+      target="_blank"
+      rel="noopener noreferrer"
+      class="btn btn-primary chatgpt-cta-btn"
+    >Open in ChatGPT →</a>
   </div>
 </section>
 
