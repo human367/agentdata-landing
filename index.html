@@ -832,9 +832,9 @@
     <li><a href="#api">API</a></li>
     <li><a href="#catalog">Catalog</a></li>
     <li><a href="#pricing">Pricing</a></li>
-    <li><a href="https://agentshop-backend-production.up.railway.app/agents.txt">Docs</a></li>
+    <li><a href="https://api.agentdata.shop/agents.txt">Docs</a></li>
   </ul>
-  <a href="https://agentshop-backend-production.up.railway.app/agents.txt" target="_blank" rel="noopener noreferrer" class="btn btn-primary">Get API access</a>
+  <a href="https://api.agentdata.shop/agents.txt" target="_blank" rel="noopener noreferrer" class="btn btn-primary">Get API access</a>
 </nav>
 
 <main role="main">
@@ -848,7 +848,7 @@
   <h1>The test environment for<br><span class="highlight">E-Commerce AI Agents</span></h1>
   <p class="hero-sub">A realistic API marketplace where your agents can search, compare and purchase — built for testing and development.</p>
   <div class="hero-ctas">
-    <a href="https://agentshop-backend-production.up.railway.app/agents.txt" target="_blank" rel="noopener noreferrer" class="btn btn-primary">Get API access</a>
+    <a href="https://api.agentdata.shop/agents.txt" target="_blank" rel="noopener noreferrer" class="btn btn-primary">Get API access</a>
     <button onclick="openPromptModal()" class="btn btn-outline">Get Test Prompt</button>
   </div>
   <div class="hero-stats">
@@ -1160,7 +1160,7 @@
 <footer>
   <div class="footer-logo">agentdata.shop</div>
   <ul class="footer-links">
-    <li><a href="https://agentshop-backend-production.up.railway.app/agents.txt">API Docs</a></li>
+    <li><a href="https://api.agentdata.shop/agents.txt">API Docs</a></li>
     <li><a href="#api">Endpoints</a></li>
     <li><a href="#pricing">Pricing</a></li>
     <li><a href="mailto:hello@agentdata.shop">Contact</a></li>
@@ -1277,7 +1277,7 @@
 
   // ── Catalog ──
   (function () {
-    const API = 'https://agentshop-backend-production.up.railway.app/api/products';
+    const API = 'https://api.agentdata.shop/api/products';
     const content = document.getElementById('catalog-content');
     let allProducts = [];
     let activeFilter = 'all';
@@ -1304,7 +1304,7 @@
         const isLive = LIVE_DATA_IDS.has(id);
         const badgeClass = isLive ? 'product-badge-live' : 'product-badge-demo';
         const badgeText = isLive ? 'Real Data' : 'Demo';
-        const detailUrl = 'https://agentshop-backend-production.up.railway.app/api/products/' + encodeURIComponent(id);
+        const detailUrl = 'https://api.agentdata.shop/api/products/' + encodeURIComponent(id);
         return `<div class="product-card">
           <span class="product-badge ${badgeClass}">${badgeText}</span>
           ${cat ? `<span class="product-tag">${escHtml(cat)}</span>` : ''}
