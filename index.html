@@ -819,6 +819,130 @@
 
     .catalog-error .err-icon { font-size: 2rem; }
 
+    /* ── Hamburger ── */
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      justify-content: center;
+      gap: 5px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 4px;
+      width: 32px;
+      height: 32px;
+    }
+
+    .hamburger span {
+      display: block;
+      height: 2px;
+      width: 100%;
+      background: var(--text);
+      border-radius: 2px;
+      transition: all 0.25s;
+    }
+
+    .hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+    .hamburger.open span:nth-child(2) { opacity: 0; }
+    .hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+    /* ── Mobile Responsive ── */
+    @media (max-width: 768px) {
+      /* Nav */
+      .hamburger { display: flex; }
+      .nav-cta { display: none; }
+
+      .nav-links {
+        display: none;
+        position: absolute;
+        top: 60px;
+        left: 0; right: 0;
+        background: rgba(17, 17, 24, 0.98);
+        backdrop-filter: blur(12px);
+        border-bottom: 1px solid var(--border);
+        flex-direction: column;
+        gap: 0;
+        padding: 0.5rem 0 1rem;
+        z-index: 99;
+      }
+
+      .nav-links.open { display: flex; }
+
+      .nav-links li { width: 100%; }
+
+      .nav-links a {
+        display: block;
+        padding: 0.75rem 1.5rem;
+        font-size: 1rem;
+      }
+
+      /* Prevent horizontal overflow */
+      body { overflow-x: hidden; }
+
+      /* Hero */
+      .hero { padding: 3.5rem 1.25rem 3rem; }
+
+      h1 { font-size: 2rem; letter-spacing: -0.03em; }
+
+      .hero-sub { font-size: 1rem; }
+
+      .hero-ctas {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0.75rem;
+      }
+
+      .hero-ctas .btn {
+        width: 100%;
+        justify-content: center;
+        font-size: 1rem;
+      }
+
+      .hero-stats {
+        gap: 1.5rem;
+        margin-top: 2.5rem;
+      }
+
+      /* Sections */
+      .section-title { font-size: 1.75rem; }
+
+      /* How it works steps */
+      .steps { gap: 1.5rem; }
+      .step-arrow { display: none; }
+
+      /* API grid */
+      .api-grid { grid-template-columns: 1fr; }
+
+      /* Code block */
+      pre { font-size: 0.78rem; }
+
+      /* Catalog */
+      .catalog-filters { gap: 0.4rem; }
+      .filter-btn { font-size: 0.78rem; padding: 0.3rem 0.75rem; }
+
+      .product-grid {
+        grid-template-columns: 1fr;
+      }
+
+      /* ChatGPT CTA */
+      .chatgpt-cta-btn {
+        width: 100%;
+        justify-content: center;
+      }
+
+      /* Pricing cards */
+      .pricing-cards { grid-template-columns: 1fr; }
+
+      /* Footer */
+      footer {
+        flex-direction: column;
+        gap: 1.25rem;
+        text-align: center;
+      }
+
+      .footer-links { flex-wrap: wrap; justify-content: center; }
+    }
+
     /* ── ChatGPT CTA ── */
     .chatgpt-cta {
       padding: clamp(3rem, 6vw, 5rem) clamp(1.5rem, 5vw, 4rem);
@@ -864,14 +988,18 @@
     <span class="dot"></span>
     agentdata.shop
   </div>
-  <ul class="nav-links">
-    <li><a href="#how">How it works</a></li>
-    <li><a href="#api">API</a></li>
-    <li><a href="#catalog">Catalog</a></li>
-    <li><a href="#pricing">Pricing</a></li>
-    <li><a href="https://api.agentdata.shop/agents.txt">Docs</a></li>
+  <ul class="nav-links" id="nav-links">
+    <li><a href="#how" onclick="closeMenu()">How it works</a></li>
+    <li><a href="#api" onclick="closeMenu()">API</a></li>
+    <li><a href="#catalog" onclick="closeMenu()">Catalog</a></li>
+    <li><a href="#chatgpt" onclick="closeMenu()">ChatGPT</a></li>
+    <li><a href="#pricing" onclick="closeMenu()">Pricing</a></li>
+    <li><a href="https://api.agentdata.shop/agents.txt" onclick="closeMenu()">Docs</a></li>
   </ul>
-  <a href="https://api.agentdata.shop/agents.txt" target="_blank" rel="noopener noreferrer" class="btn btn-primary">Get API access</a>
+  <a href="https://api.agentdata.shop/agents.txt" target="_blank" rel="noopener noreferrer" class="btn btn-primary nav-cta">Get API access</a>
+  <button class="hamburger" id="hamburger" onclick="toggleMenu()" aria-label="Toggle navigation" aria-expanded="false">
+    <span></span><span></span><span></span>
+  </button>
 </nav>
 
 <main role="main">
@@ -1060,7 +1188,7 @@
 <div class="divider"></div>
 
 <!-- ── ChatGPT CTA ───────────────────────────────────────────────────────── -->
-<section class="chatgpt-cta">
+<section class="chatgpt-cta" id="chatgpt">
   <div class="chatgpt-cta-inner">
     <div class="chatgpt-cta-icon">🤖</div>
     <h2 class="chatgpt-cta-title">Try it with ChatGPT</h2>
@@ -1431,6 +1559,27 @@
       }, 1500);
     });
   }
+
+  // ── Hamburger Menu ──
+  function toggleMenu() {
+    const btn = document.getElementById('hamburger');
+    const links = document.getElementById('nav-links');
+    const open = links.classList.toggle('open');
+    btn.classList.toggle('open', open);
+    btn.setAttribute('aria-expanded', open);
+  }
+
+  function closeMenu() {
+    document.getElementById('hamburger').classList.remove('open');
+    document.getElementById('hamburger').setAttribute('aria-expanded', false);
+    document.getElementById('nav-links').classList.remove('open');
+  }
+
+  // Close menu on outside click
+  document.addEventListener('click', function(e) {
+    const nav = document.querySelector('nav');
+    if (!nav.contains(e.target)) closeMenu();
+  });
 </script>
 
 </body>
