@@ -838,6 +838,86 @@
 
     .catalog-error .err-icon { font-size: 2rem; }
 
+    /* ── Scenario Cards ── */
+    .scenario-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 1.25rem;
+      margin-top: 2rem;
+    }
+
+    .scenario-card {
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.65rem;
+      transition: border-color 0.2s, transform 0.2s;
+    }
+
+    .scenario-card:hover {
+      border-color: var(--accent);
+      transform: translateY(-2px);
+    }
+
+    .scenario-name {
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    .scenario-task {
+      font-size: 0.875rem;
+      color: var(--muted);
+      line-height: 1.55;
+    }
+
+    .scenario-constraints {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.35rem;
+    }
+
+    .scenario-constraint {
+      background: rgba(108,99,255,0.1);
+      border: 1px solid rgba(108,99,255,0.2);
+      border-radius: 6px;
+      padding: 0.18rem 0.5rem;
+      font-size: 0.72rem;
+      color: var(--accent2);
+      font-family: 'SF Mono', 'Fira Code', monospace;
+    }
+
+    .scenario-outcome {
+      font-size: 0.8rem;
+      color: var(--muted);
+      line-height: 1.55;
+      border-top: 1px solid var(--border);
+      padding-top: 0.65rem;
+      flex: 1;
+    }
+
+    .scenario-run-btn {
+      margin-top: 0.25rem;
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--accent);
+      font-size: 0.8rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      text-align: left;
+    }
+
+    .scenario-run-btn:hover {
+      border-color: var(--accent);
+      background: rgba(108,99,255,0.08);
+    }
+
     /* ── Hamburger ── */
     /* ── Hamburger ── */
     .hamburger {
@@ -953,6 +1033,9 @@
       /* Prevent iOS auto-zoom on inputs (requires font-size >= 16px) */
       input, textarea, select { font-size: 16px; }
 
+      /* ── Scenarios ── */
+      .scenario-grid { grid-template-columns: 1fr; gap: 1rem; }
+
       /* ── Catalog ── */
       .catalog { padding: 3rem 1.25rem; }
       .catalog-inner { padding: 0; }
@@ -1027,7 +1110,7 @@
   <ul class="nav-links" id="nav-links">
     <li><a href="#how" onclick="closeMenu()">How it works</a></li>
     <li><a href="#api" onclick="closeMenu()">API</a></li>
-    <li><a href="#catalog" onclick="closeMenu()">Catalog</a></li>
+    <li><a href="#scenarios" onclick="closeMenu()">Scenarios</a></li>
     <li><a href="#chatgpt" onclick="closeMenu()">ChatGPT</a></li>
     <li><a href="#pricing" onclick="closeMenu()">Pricing</a></li>
     <li><a href="https://api.agentdata.shop/agents.txt" onclick="closeMenu()">Docs</a></li>
@@ -1183,6 +1266,27 @@
   <span class="tok-str">-H</span> <span class="tok-val">"Content-Type: application/json"</span> \
   <span class="tok-str">-d</span> <span class="tok-val">'{"email":"agent@test.com"}'</span></pre>
         </div>
+
+        <div class="code-block" style="margin-top:1rem">
+          <div class="code-header">
+            <div class="code-dots"><span></span><span></span><span></span></div>
+            <span class="code-lang">evaluate agent run</span>
+            <button class="code-copy" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><span class="tok-com"># Score your agent against a scenario</span>
+<span class="tok-cmd">curl</span> <span class="tok-str">-X POST</span> https://api.agentdata.shop/api/evaluate \
+  <span class="tok-str">-H</span> <span class="tok-val">"Content-Type: application/json"</span> \
+  <span class="tok-str">-d</span> <span class="tok-val">'{
+    "scenario_id": "budget-search",
+    "agent_run": {
+      "product_selected": "destatis-cpi-categories",
+      "price_paid": 7.99,
+      "steps_taken": ["match", "cart/add", "checkout"],
+      "email_provided": "test@example.com",
+      "error_reported": null
+    }
+  }'</span></pre>
+        </div>
       </div>
     </div>
   </div>
@@ -1190,12 +1294,32 @@
 
 <div class="divider"></div>
 
-<!-- ── Catalog ───────────────────────────────────────────────────────────── -->
+<!-- ── Test Scenarios ─────────────────────────────────────────────────────── -->
+<section class="catalog" id="scenarios">
+  <div class="catalog-inner">
+    <div class="section-label">Test Scenarios</div>
+    <h2 class="section-title">Test Scenarios</h2>
+    <p class="section-sub">Run your agent against these scenarios and evaluate whether it actually works.</p>
+
+    <div id="scenarios-content">
+      <div class="catalog-state">
+        <div class="catalog-loading">
+          <div class="spinner"></div>
+          Loading scenarios…
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ── Product Catalog ────────────────────────────────────────────────────── -->
 <section class="catalog" id="catalog">
   <div class="catalog-inner">
-    <div class="section-label">Browse the catalog</div>
-    <h2 class="section-title">What agents can buy</h2>
-    <p class="section-sub">Real products, real data. Your agent can search, compare and purchase all of these autonomously.</p>
+    <div class="section-label">Product catalog</div>
+    <h2 class="section-title">What agents can test</h2>
+    <p class="section-sub">Real and simulated products for realistic commerce scenarios.</p>
 
     <p style="margin-top:1rem; font-size:0.85rem; color:var(--muted); max-width:620px;">Products marked <span style="color:var(--green); font-weight:600;">Real Data</span> deliver real data on purchase. Demo products simulate realistic API responses for testing.</p>
 
@@ -1559,6 +1683,57 @@
   document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape' && productModal.style.display === 'flex') closeProductModal();
   });
+
+  // ── Scenarios ──
+  (function () {
+    const API = 'https://api.agentdata.shop/api/scenarios';
+    const content = document.getElementById('scenarios-content');
+
+    function renderScenarios(scenarios) {
+      if (!scenarios.length) {
+        content.innerHTML = '<div class="catalog-state"><span>No scenarios found.</span></div>';
+        return;
+      }
+      const cards = scenarios.map(s => {
+        const constraints = Object.entries(s.constraints || {})
+          .map(([k, v]) => `<span class="scenario-constraint">${_esc(k)}: ${_esc(String(v))}</span>`)
+          .join('');
+        return `<div class="scenario-card">
+          <div class="scenario-name">${_esc(s.name)}</div>
+          <div class="scenario-task">${_esc(s.task)}</div>
+          ${constraints ? `<div class="scenario-constraints">${constraints}</div>` : ''}
+          <div class="scenario-outcome">${_esc(s.expected_outcome)}</div>
+          <button class="scenario-run-btn" onclick="copyScenarioId('${_esc(s.id)}', this)">Copy scenario_id →</button>
+        </div>`;
+      }).join('');
+      content.innerHTML = `<div class="scenario-grid">${cards}</div>`;
+    }
+
+    fetch(API)
+      .then(r => { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
+      .then(data => renderScenarios(Array.isArray(data) ? data : (data.data || [])))
+      .catch(() => {
+        content.innerHTML = `<div class="catalog-state catalog-error">
+          <span class="err-icon">⚠</span>
+          <span>Could not load scenarios. Please try again later.</span>
+          <button class="btn btn-outline" style="margin-top:0.5rem;font-size:0.85rem;" onclick="location.reload()">Retry</button>
+        </div>`;
+      });
+  })();
+
+  function copyScenarioId(id, btn) {
+    navigator.clipboard.writeText(id).then(() => {
+      const orig = btn.textContent;
+      btn.textContent = 'Copied!';
+      btn.style.color = 'var(--green)';
+      btn.style.borderColor = 'var(--green)';
+      setTimeout(() => {
+        btn.textContent = orig;
+        btn.style.color = '';
+        btn.style.borderColor = '';
+      }, 1800);
+    }).catch(() => {});
+  }
 
   // ── Catalog ──
   (function () {
