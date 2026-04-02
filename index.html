@@ -1097,6 +1097,39 @@
       font-size: 1rem;
       padding: 0.75rem 2rem;
     }
+
+    /* ── Locked State ── */
+    .locked-banner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      flex-wrap: wrap;
+      padding: 0.85rem 1.1rem;
+      background: rgba(108,99,255,0.07);
+      border: 1px solid rgba(108,99,255,0.2);
+      border-radius: 10px;
+      margin-top: 1rem;
+      font-size: 0.875rem;
+      color: var(--muted);
+    }
+
+    .locked-banner strong { color: var(--text); }
+
+    .locked-upgrade-btn {
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      padding: 0.4rem 1rem;
+      border-radius: 7px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: background 0.2s;
+    }
+
+    .locked-upgrade-btn:hover { background: #7c74ff; }
   </style>
 </head>
 <body>
@@ -1344,6 +1377,22 @@
 
 <div class="divider"></div>
 
+<!-- ── Locked Banners ────────────────────────────────────────────────────── -->
+<section style="padding: 0 clamp(1.5rem,5vw,4rem) 2rem; background: var(--bg2);">
+  <div style="max-width:1100px; margin:0 auto; display:flex; flex-direction:column; gap:0.75rem;">
+    <div class="locked-banner">
+      <span>🔒 <strong>Private run history</strong> — Starter only. Your evaluate runs are currently public.</span>
+      <button class="locked-upgrade-btn" onclick="openUpgradeModal()">Unlock Starter</button>
+    </div>
+    <div class="locked-banner">
+      <span>🔒 <strong>Get your API Key</strong> — Starter plan required for authenticated requests.</span>
+      <button class="locked-upgrade-btn" onclick="openUpgradeModal()">Unlock Starter</button>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
 <!-- ── ChatGPT CTA ───────────────────────────────────────────────────────── -->
 <section class="chatgpt-cta" id="chatgpt">
   <div class="chatgpt-cta-inner">
@@ -1374,30 +1423,27 @@
         <div class="plan-price">$0</div>
         <div class="plan-period">forever free</div>
         <ul class="plan-features">
-          <li><span class="check">✓</span> <span><strong>100 API calls</strong> per month</span></li>
-          <li><span class="check">✓</span> <span>All 6 endpoints</span></li>
-          <li><span class="check">✓</span> <span>Full product catalog (14 agents)</span></li>
-          <li><span class="check">✓</span> <span>Cart &amp; checkout flow</span></li>
-          <li><span class="check">✓</span> <span><code style="font-size:0.78rem;background:rgba(108,99,255,0.12);color:var(--accent2);padding:0.1rem 0.4rem;border-radius:4px">/agents.txt</code> agent guide</span></li>
+          <li><span class="check">✓</span> <span>All <strong>5 test scenarios</strong></span></li>
+          <li><span class="check">✓</span> <span><strong>20 evaluate calls</strong> per month</span></li>
+          <li><span class="check">✓</span> <span>Public run history</span></li>
+          <li><span class="check">✓</span> <span><code style="font-size:0.78rem;background:rgba(108,99,255,0.12);color:var(--accent2);padding:0.1rem 0.4rem;border-radius:4px">/agents.txt</code> access</span></li>
           <li><span class="check">✓</span> <span>No credit card required</span></li>
         </ul>
         <button onclick="openModal()" class="btn btn-outline btn-plan">Get started free</button>
       </div>
 
       <div class="pricing-card featured">
-        <div class="featured-badge">Most Popular</div>
-        <div class="plan-name">Pro</div>
+        <div class="featured-badge">Early Access</div>
+        <div class="plan-name">Starter</div>
         <div class="plan-price"><sup>$</sup>29</div>
         <div class="plan-period">per month</div>
         <ul class="plan-features">
-          <li><span class="check">✓</span> <span><strong>Unlimited API calls</strong></span></li>
-          <li><span class="check">✓</span> <span>All Free features</span></li>
+          <li><span class="check">✓</span> <span><strong>Unlimited evaluate calls</strong></span></li>
+          <li><span class="check">✓</span> <span>Private run history</span></li>
+          <li><span class="check">✓</span> <span>API Key access</span></li>
           <li><span class="check">✓</span> <span>Priority support</span></li>
-          <li><span class="check">✓</span> <span>Custom product catalog</span></li>
-          <li><span class="check">✓</span> <span>Webhook notifications</span></li>
-          <li><span class="check">✓</span> <span>Usage analytics dashboard</span></li>
         </ul>
-        <button onclick="openModal()" class="btn btn-primary btn-plan">Start Pro trial →</button>
+        <button onclick="openUpgradeModal()" class="btn btn-primary btn-plan">Join paid beta →</button>
       </div>
     </div>
   </div>
@@ -1495,6 +1541,38 @@
   </div>
 </div>
 
+<!-- ── Upgrade Modal ──────────────────────────────────────────────────────── -->
+<div id="upgrade-modal" style="display:none; position:fixed; inset:0; z-index:1000; background:rgba(0,0,0,0.7); backdrop-filter:blur(6px); align-items:center; justify-content:center; padding:1.5rem;">
+  <div style="background:var(--bg3); border:1px solid var(--border); border-radius:20px; padding:2.5rem; max-width:420px; width:100%; position:relative;">
+    <button onclick="closeUpgradeModal()" style="position:absolute; top:1rem; right:1rem; background:transparent; border:none; color:var(--muted); font-size:1.25rem; cursor:pointer; line-height:1;">✕</button>
+    <div style="font-size:0.75rem; font-weight:700; letter-spacing:0.12em; text-transform:uppercase; color:var(--accent); margin-bottom:0.75rem;">Starter Plan</div>
+    <h3 style="font-size:1.4rem; font-weight:800; letter-spacing:-0.02em; margin-bottom:0.5rem;">Unlock Starter</h3>
+    <p style="color:var(--muted); font-size:0.9rem; margin-bottom:0.5rem;">Private runs, unlimited calls, API key access.</p>
+    <p style="color:var(--accent2); font-size:0.9rem; font-weight:600; margin-bottom:1.75rem;">$29/mo — early access pricing</p>
+
+    <form id="upgrade-form" action="https://formspree.io/f/mjgpggjn" method="POST">
+      <input type="hidden" name="plan" value="starter" />
+      <div style="display:flex; flex-direction:column; gap:0.75rem;">
+        <input
+          type="email"
+          name="email"
+          required
+          placeholder="Enter your email to join the paid beta"
+          style="background:var(--bg); border:1px solid var(--border); border-radius:10px; padding:0.75rem 1rem; color:var(--text); font-size:16px; outline:none; transition:border-color 0.2s;"
+          onfocus="this.style.borderColor='var(--accent)'"
+          onblur="this.style.borderColor='var(--border)'"
+        />
+        <button type="submit" class="btn btn-primary" style="width:100%; justify-content:center; padding:0.75rem; font-size:0.95rem; border-radius:10px;">Join paid beta →</button>
+      </div>
+    </form>
+
+    <div id="upgrade-success" style="display:none; text-align:center; padding:1rem 0;">
+      <div style="font-size:2rem; margin-bottom:0.75rem;">✓</div>
+      <p style="color:var(--green); font-weight:600; font-size:1rem;">You're on the list. We'll reach out shortly.</p>
+    </div>
+  </div>
+</div>
+
 <!-- ── Product Preview Modal ──────────────────────────────────────────────── -->
 <div id="product-modal" style="display:none; position:fixed; inset:0; z-index:1000; background:rgba(0,0,0,0.7); backdrop-filter:blur(6px); align-items:center; justify-content:center; padding:1.5rem;">
   <div style="background:var(--bg3); border:1px solid var(--border); border-radius:20px; padding:2.5rem; max-width:460px; width:100%; position:relative; max-height:90vh; overflow-y:auto;">
@@ -1540,7 +1618,7 @@
   });
 
   document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape') closeModal();
+    if (e.key === 'Escape') { closeModal(); closeUpgradeModal(); }
   });
 
   document.getElementById('waitlist-form').addEventListener('submit', async (e) => {
@@ -1625,6 +1703,40 @@
 
     form.style.display = 'none';
     document.getElementById('prompt-success').style.display = 'block';
+  });
+
+  // ── Upgrade Modal ──
+  const upgradeModal = document.getElementById('upgrade-modal');
+
+  function openUpgradeModal() {
+    upgradeModal.style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeUpgradeModal() {
+    upgradeModal.style.display = 'none';
+    document.body.style.overflow = '';
+    document.getElementById('upgrade-form').style.display = '';
+    document.getElementById('upgrade-form').reset();
+    document.getElementById('upgrade-success').style.display = 'none';
+  }
+
+  upgradeModal.addEventListener('click', (e) => {
+    if (e.target === upgradeModal) closeUpgradeModal();
+  });
+
+  document.getElementById('upgrade-form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const form = e.target;
+    try {
+      await fetch(form.action, {
+        method: 'POST',
+        body: new FormData(form),
+        headers: { 'Accept': 'application/json' }
+      });
+    } catch (_) {}
+    form.style.display = 'none';
+    document.getElementById('upgrade-success').style.display = 'block';
   });
 
   // ── Product Preview Modal ──
