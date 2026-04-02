@@ -784,9 +784,25 @@
       color: var(--accent);
       font-weight: 600;
       transition: color 0.2s;
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      padding: 0;
     }
 
     .product-link:hover { color: var(--accent2); }
+
+    /* ── Product Preview Modal ── */
+    .product-modal-row {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.875rem;
+      padding: 0.4rem 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .product-modal-row:last-child { border-bottom: none; }
+    .product-modal-label { color: var(--muted); }
+    .product-modal-val   { color: var(--text); font-weight: 600; }
 
     .catalog-state {
       display: flex;
@@ -903,8 +919,8 @@
       .stat-num { font-size: 1.4rem; }
 
       /* ── Section headings ── */
-      .section-title { font-size: 1.6rem; }
-      .section-sub   { font-size: 0.95rem; }
+      .section-title { font-size: clamp(1.5rem, 5vw, 2.5rem); }
+      .section-sub   { font-size: 0.875rem; }
 
       /* ── How it works ── */
       .how { padding: 3rem 1.25rem; }
@@ -913,15 +929,16 @@
       .step { padding: 1.25rem; }
 
       /* ── API section ── */
+      #api { overflow-x: hidden; }
       .api-section { padding: 3rem 1.25rem; }
       .api-grid { grid-template-columns: 1fr; gap: 1.5rem; }
 
-      /* Code blocks: container constrained, pre scrolls inside */
+      /* Code blocks: container constrained, pre wraps on mobile */
       .code-block {
         overflow-y: hidden;
         overflow-x: hidden;
         width: 100%;
-        max-width: 100%;
+        max-width: calc(100vw - 2rem);
       }
       .code-block pre {
         font-size: 0.75rem;
@@ -929,7 +946,12 @@
         -webkit-overflow-scrolling: touch;
         max-width: 100%;
         box-sizing: border-box;
+        white-space: pre-wrap;
+        word-break: break-all;
       }
+
+      /* Prevent iOS auto-zoom on inputs (requires font-size >= 16px) */
+      input, textarea, select { font-size: 16px; }
 
       /* ── Catalog ── */
       .catalog { padding: 3rem 1.25rem; }
@@ -1353,6 +1375,19 @@
   </div>
 </div>
 
+<!-- ── Product Preview Modal ──────────────────────────────────────────────── -->
+<div id="product-modal" style="display:none; position:fixed; inset:0; z-index:1000; background:rgba(0,0,0,0.7); backdrop-filter:blur(6px); align-items:center; justify-content:center; padding:1.5rem;">
+  <div style="background:var(--bg3); border:1px solid var(--border); border-radius:20px; padding:2.5rem; max-width:460px; width:100%; position:relative; max-height:90vh; overflow-y:auto;">
+    <button onclick="closeProductModal()" style="position:absolute; top:1rem; right:1rem; background:transparent; border:none; color:var(--muted); font-size:1.25rem; cursor:pointer; line-height:1;">✕</button>
+    <div id="pm-tag" style="font-size:0.75rem; font-weight:700; letter-spacing:0.12em; text-transform:uppercase; color:var(--accent); margin-bottom:0.75rem;"></div>
+    <h3 id="pm-name" style="font-size:1.4rem; font-weight:800; letter-spacing:-0.02em; margin-bottom:0.5rem;"></h3>
+    <p id="pm-desc" style="color:var(--muted); font-size:0.9rem; line-height:1.7; margin-bottom:1.25rem;"></p>
+    <div id="pm-details" style="display:flex; flex-direction:column; margin-bottom:1.25rem; border-top:1px solid var(--border);"></div>
+    <div id="pm-constraints" style="display:none; background:var(--code-bg); border:1px solid var(--border); border-radius:8px; padding:0.75rem 1rem; font-size:0.78rem; color:var(--muted); font-family:'SF Mono','Fira Code',monospace; margin-bottom:1.25rem; white-space:pre-wrap; word-break:break-all;"></div>
+    <a id="pm-buy" href="https://chatgpt.com/g/g-69cd1203714c81919c7d3d7bce4df9a2-agentdata-shopping-assistant" target="_blank" rel="noopener noreferrer" class="btn btn-primary" style="width:100%; justify-content:center; padding:0.75rem; font-size:0.95rem; border-radius:10px; display:inline-flex;">Buy this product →</a>
+  </div>
+</div>
+
 <!-- ── Footer ─────────────────────────────────────────────────────────────── -->
 <footer>
   <div class="footer-logo">agentdata.shop</div>
@@ -1472,6 +1507,63 @@
     document.getElementById('prompt-success').style.display = 'block';
   });
 
+  // ── Product Preview Modal ──
+  const productModal = document.getElementById('product-modal');
+  const productCatalogMap = {};
+
+  function _esc(str) {
+    return String(str)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;');
+  }
+
+  function openProductModal(id) {
+    const p = productCatalogMap[id];
+    if (!p) return;
+    document.getElementById('pm-tag').textContent = p.category || '';
+    document.getElementById('pm-name').textContent = p.name || 'Product';
+    document.getElementById('pm-desc').textContent = p.description || p.desc || '';
+
+    const rows = [];
+    if (p.price != null) rows.push(['Price', '$' + Number(p.price).toFixed(2)]);
+    if (p.category)      rows.push(['Category', p.category]);
+    if (p.accuracy != null) rows.push(['Accuracy', (p.accuracy * 100).toFixed(0) + '%']);
+    if (p.latency != null)  rows.push(['Latency', p.latency + ' ms']);
+    if (p.region)        rows.push(['Region', p.region]);
+    if (p.format)        rows.push(['Format', p.format]);
+    document.getElementById('pm-details').innerHTML = rows.map(([l, v]) =>
+      `<div class="product-modal-row"><span class="product-modal-label">${_esc(l)}</span><span class="product-modal-val">${_esc(v)}</span></div>`
+    ).join('');
+
+    const constraintsEl = document.getElementById('pm-constraints');
+    if (p.constraints) {
+      constraintsEl.textContent = typeof p.constraints === 'string'
+        ? p.constraints
+        : JSON.stringify(p.constraints, null, 2);
+      constraintsEl.style.display = 'block';
+    } else {
+      constraintsEl.style.display = 'none';
+    }
+
+    productModal.style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeProductModal() {
+    productModal.style.display = 'none';
+    document.body.style.overflow = '';
+  }
+
+  productModal.addEventListener('click', (e) => {
+    if (e.target === productModal) closeProductModal();
+  });
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && productModal.style.display === 'flex') closeProductModal();
+  });
+
   // ── Catalog ──
   (function () {
     const API = 'https://api.agentdata.shop/api/products';
@@ -1501,7 +1593,7 @@
         const isLive = LIVE_DATA_IDS.has(id);
         const badgeClass = isLive ? 'product-badge-live' : 'product-badge-demo';
         const badgeText = isLive ? 'Real Data' : 'Demo';
-        const detailUrl = 'https://api.agentdata.shop/api/products/' + encodeURIComponent(id);
+        if (id) productCatalogMap[id] = p;
         return `<div class="product-card">
           <span class="product-badge ${badgeClass}">${badgeText}</span>
           ${cat ? `<span class="product-tag">${escHtml(cat)}</span>` : ''}
@@ -1509,7 +1601,7 @@
           ${desc ? `<div class="product-desc">${escHtml(desc)}</div>` : ''}
           <div class="product-footer">
             <span class="product-price">${escHtml(price)}</span>
-            ${id ? `<a class="product-link" href="${detailUrl}" target="_blank" rel="noopener noreferrer">View details →</a>` : ''}
+            ${id ? `<button class="product-link" onclick="openProductModal('${escHtml(id)}')">View details →</button>` : ''}
           </div>
         </div>`;
       }).join('');
